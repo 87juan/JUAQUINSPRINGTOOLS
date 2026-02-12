@@ -27,6 +27,10 @@ import com.example.demo.sericisiosSQL.sql_funcion;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import com.example.demo.serviciosCSV.leercsv;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
@@ -40,7 +44,7 @@ public class Inicio {
 	
 	@SuppressWarnings("deprecation")
 	public static void main(String[] args)throws Exception {
-		// TODO Auto-generated method stub
+		final Logger logger = LoggerFactory.getLogger(Inicio.class);
 		String configFilePath ="C://Users/juan.lopez.de.la.pla/Documents/JuaquinTareaFarmville/config.properties";
 		Properties props = new Properties();
 		
@@ -76,7 +80,7 @@ public class Inicio {
        ArrayList<tractores> tCSV =leerCSV.leerCSVT(csvT.toString(),erroresLog);
        
        Savepoint spGranjeros = conn.setSavepoint();
-       System.out.println("=======================Granjero=======================");
+       logger.info("=======================Granjero=======================");
        try {
     	conn.setAutoCommit(false);
    
@@ -92,27 +96,27 @@ public class Inicio {
            				
            				) {
            			insertarDuplicado.addDuplicadoG(duplicadosLog, granjeros);
-           			System.out.println("Duplicado ====");
+           			logger.info("Duplicado: "+granjeros);
            		}else {
            			sqlFuncion.updateGranjero(granjeros, conn,erroresLog);
            			conn.commit();
-           			System.out.println("Update:"+ granjeros );
+           			logger.info("Update:"+ granjeros );
 				}
            	}else {
            		sqlFuncion.addGrangero(granjeros, conn, erroresLog);
            		conn.commit();
-           		System.out.println("Add:"+ granjeros );
+           		logger.info("Add:"+ granjeros );
 			}
    			
     	}
 		
        } catch (Exception e) {
-    	   System.out.println(e);
+    	   logger.error(e.getMessage());
     	   conn.rollback(spGranjeros);
        }
        
        Savepoint spPlantacion = conn.setSavepoint();
-       System.out.println("=======================Plantaciones =======================");
+       logger.info("=======================Plantaciones =======================");
        try {
     	conn.setAutoCommit(false);
     	for (plantacion p : pCSV) {
@@ -127,27 +131,27 @@ public class Inicio {
                     p.getProxima_cosecha().equals(p2.getProxima_cosecha())) 
            		{
            			insertarDuplicado.addDuplicadoP(duplicadosLog, p);
-           			System.out.println("Duplicado ====");
+           			logger.info("Duplicado: "+p);
            		}else {
            			sqlFuncion.updatePlantacion(p, conn, duplicadosLog);
            			conn.commit();
-           			System.out.println("Update:"+ p );
+           			logger.info("Update:"+ p );
 				}
            	}else {
            		sqlFuncion.addPlantacion(p, conn, duplicadosLog);
            		conn.commit();
-           		System.out.println("Add:"+ p);
+           		logger.info("Add:"+ p);
 			}
    			
     	}
 		
        } catch (Exception e) {
-    	   System.out.println(e);
+    	   logger.error(e.getMessage());
     	   conn.rollback(spPlantacion);
        }
        
        Savepoint spRiego = conn.setSavepoint();
-       System.out.println("=======================Riegos =======================");
+       logger.info("=======================Riegos =======================");
        try {
     	conn.setAutoCommit(false);
     	for (riegos r : rCSV) {
@@ -160,27 +164,27 @@ public class Inicio {
                     r.getVelocidad()==(r2.getVelocidad())) 
            		{
            			insertarDuplicado.addDuplicadoR(duplicadosLog, r);
-           			System.out.println("Duplicado ====");
+           			logger.info("Duplicado: "+r);
            		}else {
            			sqlFuncion.updateRiego(r, conn, duplicadosLog);
            			conn.commit();
-           			System.out.println("Update:"+ r );
+           			logger.info("Update:"+ r );
 				}
            	}else {
            		sqlFuncion.addRiego(r, conn, duplicadosLog);
            		conn.commit();
-           		System.out.println("Add:"+ r);
+           		logger.info("Add:"+ r);
 			}
    			
     	}
 		
        } catch (Exception e) {
-    	   System.out.println(e);
+    	   logger.error(e.getMessage());
     	   conn.rollback(spRiego);
        }
        
        Savepoint spConstrucciones = conn.setSavepoint();
-       System.out.println("=======================Construcciones=======================");
+       logger.info("=======================Construcciones=======================");
        try {
     	conn.setAutoCommit(false);
     	for (construccion c : cCSV) {
@@ -193,27 +197,27 @@ public class Inicio {
                     c.getId_granjero()==(c2.getId_granjero())) 
            		{
            			insertarDuplicado.addDuplicadoC(duplicadosLog, c);
-           			System.out.println("Duplicado ====");
+           			logger.info("Duplicado: "+c);
            		}else {
            			sqlFuncion.updateConstruccion(c, conn, duplicadosLog);
            			conn.commit();
-           			System.out.println("Update:"+ c);
+           			logger.info("Update:"+ c);
 				}
            	}else {
            		sqlFuncion.addConstruccion(c, conn, duplicadosLog);
            		conn.commit();
-           		System.out.println("Add:"+ c);
+           		logger.info("Add:"+ c);
 			}
    			
     	}
 		
        } catch (Exception e) {
-    	   System.out.println(e);
+    	   logger.error(e.getMessage());
     	   conn.rollback(spConstrucciones);
        }
        
        Savepoint spTractores = conn.setSavepoint();
-       System.out.println("=======================Tractores=======================");
+       logger.info("=======================Tractores=======================");
        try {
     	conn.setAutoCommit(false);
     	for (tractores t : tCSV) {
@@ -227,27 +231,27 @@ public class Inicio {
                     t.getPrecio_venta().equals(t2.getPrecio_venta())) 
            		{
            			insertarDuplicado.addDuplicadoT(duplicadosLog, t);
-           			System.out.println("Duplicado ====");
+           			logger.info("Duplicado: "+t);
            		}else {
            			sqlFuncion.updateTractor(t, conn, duplicadosLog);
            			conn.commit();
-           			System.out.println("Update:"+ t);
+           			logger.info("Update:"+ t);
 				}
            	}else {
            		sqlFuncion.addTractor(t, conn, duplicadosLog);
            		conn.commit();
-           		System.out.println("Add:"+ t);
+           		logger.info("Add:"+ t);
 			}
    			
     	}
 		
        } catch (Exception e) {
-    	   System.out.println(e);
+    	   logger.error(e.getMessage());
     	   conn.rollback(spTractores);
        }
        
        Savepoint spGranjeroG = conn.setSavepoint();
-       System.out.println("=======================Granjero Granjero =======================");
+       logger.info("=======================Granjero Granjero =======================");
        try {
     	conn.setAutoCommit(false);
     	
@@ -260,22 +264,22 @@ public class Inicio {
            				granjerosG.getPuntos_compartidos()==(g2.getPuntos_compartidos())
            				) {
            			insertarDuplicado.addDuplicadoGG(duplicadosLog, granjerosG);
-           			System.out.println("Duplicado ====");
+           			logger.info("Duplicado"+ granjerosG);
            		}else {
            			sqlFuncion.updateGranjeroGranjero(granjerosG, conn, erroresLog);
            			conn.commit();
-           			System.out.println("Update:"+ granjerosG );
+           			logger.info("Update:"+ granjerosG);
 				}
            	}else {
            		sqlFuncion.addGranjeroGranjero(granjerosG, conn, erroresLog);
            		conn.commit();
-           		System.out.println("Add:"+ granjerosG);
+           		logger.info("Add:"+ granjerosG);
 			}
    			
     	}
 		
        } catch (Exception e) {
-    	   System.out.println(e);
+    	   logger.error(e.getMessage());
     	   conn.rollback(spGranjeroG);
        }
         

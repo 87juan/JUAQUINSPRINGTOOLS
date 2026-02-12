@@ -10,6 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.example.demo.modelo.construccion;
 import com.example.demo.modelo.granjero;
 import com.example.demo.modelo.granjeroG;
@@ -17,9 +20,11 @@ import com.example.demo.modelo.plantacion;
 import com.example.demo.modelo.riegos;
 import com.example.demo.modelo.tractores;
 import com.example.demo.serviciosCSV.InsertarError;
+import com.example.demo.serviciosCSV.leercsv;
 import com.google.protobuf.TextFormat.ParseException;
 
 public class sql_funcion {
+	private static final Logger logger = LoggerFactory.getLogger(sql_funcion.class);
 	private static InsertarError instantiationError = new InsertarError();
     //====================SELECT===============================================
 	
@@ -39,18 +44,16 @@ public class sql_funcion {
 
 	    } catch (SQLException e) {
 	        if (e.getErrorCode() == 1146) { 
-	            // Error MySQL: tabla no existe
-	            System.out.println("Tabla 'granjeros' no existe.");
+	        	logger.error("Tabla 'granjeros' no existe.");
 	            instantiationError.addErrorGG(errorlog, "Tabla no existe: " + e.getMessage());
-	            return false;  // <--- devolvemos null si la tabla no existe
+	            return false;  
 	        } else {
-	            // Otro error de SQL
-	            System.out.println("Error al consultar la BD: " + e.getMessage());
+	        	logger.error("Error al consultar la BD: " + e.getMessage());
 	            instantiationError.addErrorGG(errorlog, e.getMessage());
 	            return false;
 	        }
 	    } catch (Exception e) {
-	        System.out.println("Error inesperado: " + e.getMessage());
+	    	logger.error("Error inesperado: " + e.getMessage());
 	        instantiationError.addErrorGG(errorlog, e.getMessage());
 	        return false;
 	    }
@@ -65,28 +68,24 @@ public class sql_funcion {
 
 		        try (ResultSet rs = ps.executeQuery()) {
 		            if (rs.next()) {
-		                // El registro existe
 		                return true;
 		            } else {
-		                // La tabla existe pero el registro no
 		                return false;
 		            }
 		        }
 
 		    } catch (SQLException e) {
-		        if (e.getErrorCode() == 1146) { 
-		            // Error MySQL: tabla no existe
-		            System.out.println("Tabla 'granjero_granjero' no existe.");
+		        if (e.getErrorCode() == 1146) { 		      
+		        	logger.error("Tabla 'granjero_granjero' no existe.");
 		            instantiationError.addErrorGG(errorlog, "Tabla no existe: " + e.getMessage());
-		            return false;  // <--- devolvemos null si la tabla no existe
+		            return false;
 		        } else {
-		            // Otro error de SQL
-		            System.out.println("Error al consultar la BD: " + e.getMessage());
+		        	logger.error("Error al consultar la BD: " + e.getMessage());
 		            instantiationError.addErrorGG(errorlog, e.getMessage());
 		            return false;
 		        }
 		    } catch (Exception e) {
-		        System.out.println("Error inesperado: " + e.getMessage());
+		    	logger.error("Error inesperado: " + e.getMessage());
 		        instantiationError.addErrorGG(errorlog, e.getMessage());
 		        return false;
 		    }
@@ -108,18 +107,16 @@ public class sql_funcion {
 
 	    } catch (SQLException e) {
 	        if (e.getErrorCode() == 1146) { 
-
-	            System.out.println("Tabla 'construcciones' no existe.");
+	        	logger.error("Tabla 'construcciones' no existe.");
 	            instantiationError.addErrorGG(errorlog, "Tabla no existe: " + e.getMessage());
 	            return false;  
-	        } else {
-	            // Otro error de SQL
-	            System.out.println("Error al consultar la BD: " + e.getMessage());
+	        } else {	           
+	        	logger.error("Error al consultar la BD: " + e.getMessage());
 	            instantiationError.addErrorGG(errorlog, e.getMessage());
 	            return false;
 	        }
 	    } catch (Exception e) {
-	        System.out.println("Error inesperado: " + e.getMessage());
+	    	logger.error("Error inesperado: " + e.getMessage());
 	        instantiationError.addErrorGG(errorlog, e.getMessage());
 	        return false;
 	    }
@@ -127,8 +124,6 @@ public class sql_funcion {
 
 	public boolean selecExistPlantaciones(int id,Connection conn, String errorlog) {
 		String select="SELECT id FROM plantaciones where id like ?";
-		
-
 		try(PreparedStatement ps = conn.prepareStatement(select)) {
 			ps.setInt(1,id);
 			ResultSet resultado= ps.executeQuery();
@@ -142,18 +137,16 @@ public class sql_funcion {
 
 	    } catch (SQLException e) {
 	        if (e.getErrorCode() == 1146) { 
-
-	            System.out.println("Tabla 'plantaciones' no existe.");
+	        	logger.error("Tabla 'plantaciones' no existe.");
 	            instantiationError.addErrorGG(errorlog, "Tabla no existe: " + e.getMessage());
 	            return false;  
 	        } else {
-	            // Otro error de SQL
-	            System.out.println("Error al consultar la BD: " + e.getMessage());
+	        	logger.error("Error al consultar la BD: " + e.getMessage());
 	            instantiationError.addErrorGG(errorlog, e.getMessage());
 	            return false;
 	        }
 	    } catch (Exception e) {
-	        System.out.println("Error inesperado: " + e.getMessage());
+	    	logger.error("Error inesperado: " + e.getMessage());
 	        instantiationError.addErrorGG(errorlog, e.getMessage());
 	        return false;
 	    }	
@@ -175,18 +168,16 @@ public class sql_funcion {
 
 	    } catch (SQLException e) {
 	        if (e.getErrorCode() == 1146) { 
-
-	            System.out.println("Tabla 'Riegos' no existe.");
+	        	logger.error("Tabla 'Riegos' no existe.");
 	            instantiationError.addErrorGG(errorlog, "Tabla no existe: " + e.getMessage());
 	            return false;  
 	        } else {
-	            // Otro error de SQL
-	            System.out.println("Error al consultar la BD: " + e.getMessage());
+	        	logger.error("Error al consultar la BD: " + e.getMessage());
 	            instantiationError.addErrorGG(errorlog, e.getMessage());
 	            return false;
 	        }
 	    } catch (Exception e) {
-	        System.out.println("Error inesperado: " + e.getMessage());
+	    	logger.error("Error inesperado: " + e.getMessage());
 	        instantiationError.addErrorGG(errorlog, e.getMessage());
 	        return false;
 	    }		
@@ -209,17 +200,17 @@ public class sql_funcion {
 	    } catch (SQLException e) {
 	        if (e.getErrorCode() == 1146) { 
 
-	            System.out.println("Tabla 'tractores' no existe.");
+	        	logger.error("Tabla 'tractores' no existe.");
 	            instantiationError.addErrorGG(errorlog, "Tabla no existe: " + e.getMessage());
 	            return false;  
 	        } else {
-	            // Otro error de SQL
-	            System.out.println("Error al consultar la BD: " + e.getMessage());
+	            
+	        	logger.error("Error al consultar la BD: " + e.getMessage());
 	            instantiationError.addErrorGG(errorlog, e.getMessage());
 	            return false;
 	        }
 	    } catch (Exception e) {
-	        System.out.println("Error inesperado: " + e.getMessage());
+	    	logger.error("Error inesperado: " + e.getMessage());
 	        instantiationError.addErrorGG(errorlog, e.getMessage());
 	        return false;
 	    }		
@@ -237,8 +228,9 @@ public class sql_funcion {
 	            stmt.setInt(5, granjero.getPuntos());
 	            stmt.setInt(6, granjero.getNivel());
 	            stmt.executeUpdate();
+	            logger.info("AddGranjero añadido");
 	        }catch (Exception e) {
-	        	System.out.println("AddGranjeroGramjero "+e);
+	        	logger.error("Error AddGranjero "+e.getMessage());
 	        	instantiationError.addErrorG(pathError.toString(),e.getMessage());
 			}
 		 
@@ -251,8 +243,9 @@ public class sql_funcion {
             stmt.setInt(2,	granjerogranjero.getId_vecino());
             stmt.setInt(3, granjerogranjero.getPuntos_compartidos());
             stmt.executeUpdate();
+            logger.info("AddGranjeroGranjero añadido");
         } catch (Exception e) {
-        	System.out.println("AddGranjeroGramjero "+e);
+        	logger.error("Error AddGranjeroGranjero "+e.getMessage());
         	instantiationError.addErrorGG(pathError.toString(),e.getMessage());
 		}
     }
@@ -267,7 +260,9 @@ public class sql_funcion {
 	        stmt.setDouble(3, construccion.getPrecio());
 	        stmt.setInt(4, construccion.getId_granjero());
 	        stmt.executeUpdate();
+	        logger.info("AddConstructor");
 	    } catch (Exception e) {
+	    	logger.error("Error AddConstructor "+e.getMessage());
         	instantiationError.addErrorC(pathError.toString(),e.getMessage());
 		}
 	}
@@ -289,7 +284,9 @@ public class sql_funcion {
 	        stmt.setTimestamp(5, plantacion.getProxima_cosecha());
 	        stmt.setInt(6, plantacion.getId_granjero());
 	        stmt.executeUpdate();
-	    }catch (Exception e) {
+	        logger.info("AddPlantacion");
+	    } catch (Exception e) {
+	    	logger.error("Error AddPlantacion "+e.getMessage());
         	instantiationError.addErrorP(pathError.toString(),e.getMessage());
 		}
 	}
@@ -304,7 +301,9 @@ public class sql_funcion {
 	        stmt.setDouble(3, riego.getVelocidad());
 	        stmt.setInt(4, riego.getId_plantacion());
 	        stmt.executeUpdate();
-	    }catch (Exception e) {
+	        logger.info("AddRiego");
+	    } catch (Exception e) {
+	    	logger.error("Error AddRiego "+e.getMessage());
         	instantiationError.addErrorR(pathError.toString(),e.getMessage());
 		}
 	}
@@ -320,7 +319,9 @@ public class sql_funcion {
 	        stmt.setFloat(4, tractor.getPrecio_venta());
 	        stmt.setInt(5, tractor.getId_construccion());
 	        stmt.executeUpdate();
-	    }catch (Exception e) {
+	        logger.info("AddTractor");
+	    } catch (Exception e) {
+	    	logger.error("Error AddTractor "+e.getMessage());
         	instantiationError.addErrorR(pathError.toString(),e.getMessage());
 		}
 	}
@@ -343,8 +344,9 @@ public class sql_funcion {
 	        stmt.setInt(5, granjero.getNivel());
 	        stmt.setInt(6, granjero.getId());
 	        stmt.executeUpdate();
-	    }catch (Exception e) {
-	    	System.out.println("Error en Update la BD: " + e.getMessage());
+	        logger.info("UpdateGranjero");
+	    } catch (Exception e) {
+	    	logger.error("Error UpdateGranjero en la BD "+e.getMessage());
         	instantiationError.addErrorG(pathError.toString(),e.getMessage());
 		}
 	}
@@ -363,8 +365,9 @@ public class sql_funcion {
 	        stmt.setInt(2, relacion.getId_granjero());
 	        stmt.setInt(3, relacion.getId_vecino());
 	        stmt.executeUpdate();
-	    }catch (Exception e) {
-	    	System.out.println("Error en Update la BD: " + e.getMessage());
+	        logger.info("updateGranjeroGranjero");
+	    } catch (Exception e) {
+	    	logger.error("Error updateGranjeroGranjero en la BD "+e.getMessage());
         	instantiationError.addErrorGG(pathError.toString(),e.getMessage());
 		}
 	}
@@ -384,8 +387,9 @@ public class sql_funcion {
 	        stmt.setInt(3, construccion.getId_granjero());
 	        stmt.setInt(4, construccion.getId());
 	        stmt.executeUpdate();
-	    }catch (Exception e) {
-	    	System.out.println("Error en Update la BD: " + e.getMessage());
+	        logger.error("updateConstruccion");
+	    } catch (Exception e) {
+	    	logger.error("Error updateConstruccion en la BD "+e.getMessage());
         	instantiationError.addErrorC(pathError.toString(),e.getMessage());
 		}
 	}
@@ -406,8 +410,9 @@ public class sql_funcion {
 	        stmt.setInt(5, plantacion.getId_granjero());
 	        stmt.setInt(6, plantacion.getId());
 	        stmt.executeUpdate();
-	    }catch (Exception e) {
-	    	System.out.println("Error en Update la BD: " + e.getMessage());
+	        logger.info("updatePlantacion");
+	    } catch (Exception e) {
+	    	logger.error("Error updatePlantacion en la BD "+e.getMessage());
         	instantiationError.addErrorP(pathError.toString(),e.getMessage());
 		}
 	    System.out.println("Id: " +plantacion.getId());
@@ -428,8 +433,9 @@ public class sql_funcion {
 	        stmt.setInt(3, riego.getId_plantacion());
 	        stmt.setInt(4, riego.getId());
 	        stmt.executeUpdate();
-	    }catch (Exception e) {
-	    	System.out.println("Error en Update la BD: " + e.getMessage());
+	        logger.info("updateRiego");
+	    } catch (Exception e) {
+	    	logger.error("Error updateRiego en la BD "+e.getMessage());
         	instantiationError.addErrorR(pathError.toString(),e.getMessage());
 		}
 	}
@@ -449,8 +455,9 @@ public class sql_funcion {
 	        stmt.setInt(4, tractor.getId_construccion());
 	        stmt.setInt(5, tractor.getId());
 	        stmt.executeUpdate();
-	    }catch (Exception e) {
-	    	System.out.println("Error en Update la BD: " + e.getMessage());
+	        logger.info("updateTractor");
+	    } catch (Exception e) {
+	    	logger.error("Error updateTractor en la BD "+e.getMessage());
         	instantiationError.addErrorT(pathError.toString(),e.getMessage());
 		}
 	}
@@ -476,11 +483,11 @@ public class sql_funcion {
 	            }
 	        }catch (Exception e) {
 	        	instantiationError.addErrorG(pathError.toString(),e.getMessage());
-	        	System.out.println(e);
+	        	logger.error(e.getMessage());
 	        }
 	    }catch (Exception e) {
         	instantiationError.addErrorG(pathError.toString(),e.getMessage());
-        	System.out.println(e);
+        	logger.error(e.getMessage());
         }
 	    return null;
 	}
@@ -502,11 +509,11 @@ public class sql_funcion {
             }
         }catch (Exception e) {
 	        	instantiationError.addErrorGG(pathError.toString(),e.getMessage());
-	        	System.out.println(e);
+	        	logger.error(e.getMessage());
 	        }
 	    }catch (Exception e) {
         	instantiationError.addErrorGG(pathError.toString(),e.getMessage());
-        	System.out.println(e);
+        	logger.error(e.getMessage());
         }
     return null;
     }
@@ -529,11 +536,11 @@ public class sql_funcion {
                 }
             }catch (Exception e) {
 	        	instantiationError.addErrorC(pathError.toString(),e.getMessage());
-	        	System.out.println(e);
+	        	logger.error(e.getMessage());
 	        }
 	    }catch (Exception e) {
         	instantiationError.addErrorC(pathError.toString(),e.getMessage());
-        	System.out.println(e);
+        	logger.error(e.getMessage());
         }
         return null;
     }
@@ -558,11 +565,11 @@ public class sql_funcion {
                 }
             }catch (Exception e) {
 	        	instantiationError.addErrorP(pathError.toString(),e.getMessage());
-	        	System.out.println(e);
+	        	logger.error(e.getMessage());
 	        }
 	    }catch (Exception e) {
         	instantiationError.addErrorP(pathError.toString(),e.getMessage());
-        	System.out.println(e);
+        	logger.error(e.getMessage());
         }
         return null;
     }
@@ -585,11 +592,11 @@ public class sql_funcion {
                 }
             }catch (Exception e) {
 	        	instantiationError.addErrorR(pathError.toString(),e.getMessage());
-	        	System.out.println(e);
+	        	logger.error(e.getMessage());
 	        }
 	    }catch (Exception e) {
         	instantiationError.addErrorR(pathError.toString(),e.getMessage());
-        	System.out.println(e);
+        	logger.error(e.getMessage());
         }
         return null;
     }
@@ -613,11 +620,11 @@ public class sql_funcion {
                 }
             }catch (Exception e) {
 	        	instantiationError.addErrorT(pathError.toString(),e.getMessage());
-	        	System.out.println(e);
+	        	logger.error(e.getMessage());
 	        }
 	    }catch (Exception e) {
         	instantiationError.addErrorT(pathError.toString(),e.getMessage());
-        	System.out.println(e);
+        	logger.error(e.getMessage());
         }
         return null;
     }

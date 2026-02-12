@@ -12,6 +12,8 @@ import java.util.Map;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.logging.log4j.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.example.demo.modelo.construccion;
 import com.example.demo.modelo.granjero;
@@ -22,7 +24,7 @@ import com.example.demo.modelo.tractores;
 
 public class leercsv {
 	private static InsertarError instantiationError = new InsertarError();
-	
+	private static final Logger logger = LoggerFactory.getLogger(leercsv.class);
 	public ArrayList<granjero> leerCSVG(String pathG,String pathError) throws IOException {
 	    ArrayList<granjero> granjerosLista = new ArrayList<>();
 	    String[] HEADERS = {"id","nombre","descripcion","dinero","puntos","nivel"};
@@ -45,7 +47,7 @@ public class leercsv {
 				
 					granjerosLista.add(g);
 				} catch (Exception e) {
-					 System.out.println("granjeros "+e);
+					 logger.error("granjeros "+e);
 	        		 instantiationError.addErrorG(pathError.toString(),e.getMessage());
 	 				 return granjerosLista; 
 				}
@@ -74,7 +76,7 @@ public class leercsv {
                 c.setId_granjero(Integer.parseInt(record.get("id_granjero")));
                 construccionesLista.add(c);
              } catch (Exception e) {
-            	 System.out.println("construcciones "+e);
+            	 logger.error("construcciones "+e);
         		 instantiationError.addErrorC(pathError.toString(),e.getMessage());
             	 return construccionesLista;
      			}
@@ -103,7 +105,7 @@ public class leercsv {
             	gg.setPuntos_compartidos(Integer.parseInt(record.get("puntos_compartidos")));
 				granjeros_granjeros_Lista.add(gg);
         	 } catch (Exception e) {
-        		 System.out.println("Granjero granjero "+e);
+        		 logger.error("Granjero granjero "+e);
         		 instantiationError.addErrorGG(pathError.toString(),e.getMessage());
  				 return granjeros_granjeros_Lista; 
         	 }
@@ -135,7 +137,7 @@ public class leercsv {
 				p.setId_granjero(Integer.parseInt(record.get("id_granjero")));
 				plantacionLista.add(p);
 			} catch (Exception e) {
-				System.out.println("plantacionLista "+e);
+				logger.error("plantacionLista "+e);
         		 instantiationError.addErrorP(pathError.toString(),e.getMessage());
  				 return plantacionLista; 
 				}
@@ -165,7 +167,7 @@ public class leercsv {
                 r.setId_plantacion(Integer.parseInt(record.get("id_plantacion")));
                 riegoLista.add(r);
 			}catch (Exception e) {
-				System.out.println("riegoLista "+e);
+				logger.error("riegoLista "+e);
        		 	instantiationError.addErrorR(pathError.toString(),e.getMessage());
        		 	return riegoLista; 
 				}
@@ -197,7 +199,7 @@ public class leercsv {
 	            	t.setId_construccion(Integer.parseInt(record.get("id_construccion")));
 	            	Tractores_Lista.add(t);
 	        	 } catch (Exception e) {
-	        		 System.out.println("Tracores "+e);
+	        		 logger.error("Tracores "+e);
 	        		 instantiationError.addErrorT(pathError.toString(),e.getMessage());
 	 				 return Tractores_Lista; 
 	        	 }
